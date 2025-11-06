@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Verification</title>
+    <style>
+      /* Reset styles */
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        background-color: #f4f6f8;
+        color: #333;
+      }
+
+      .email-container {
+        width: 100%;
+        background-color: #f4f6f8;
+        padding: 30px 10px;
+      }
+
+      .email-content {
+        background-color: #ffffff;
+        max-width: 500px;
+        margin: 0 auto;
+        border-radius: 12px;
+        padding: 30px 25px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+      }
+
+      .logo {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .logo img {
+        width: 120px;
+        max-width: 100%;
+      }
+
+      h2 {
+        text-align: center;
+        color: #222;
+        font-size: 22px;
+        margin-bottom: 20px;
+      }
+
+      p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #555;
+        margin: 10px 0;
+      }
+
+      .code-box {
+        background-color: #eef3ff;
+        border: 2px dashed #4a90e2;
+        color: #1a3d7c;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        padding: 15px;
+        border-radius: 8px;
+        letter-spacing: 4px;
+        margin: 25px 0;
+      }
+
+      .footer {
+        text-align: center;
+        font-size: 14px;
+        color: #888;
+        margin-top: 25px;
+      }
+
+      #btn {
+        width: 100%;
+        padding-block: 10px;
+        font-size: large;
+        background-color: #018d43;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+
+      /* Responsive Design */
+      @media only screen and (max-width: 600px) {
+        .email-content {
+          padding: 20px 15px;
+        }
+
+        h2 {
+          font-size: 20px;
+        }
+
+        p {
+          font-size: 15px;
+        }
+
+        .code-box {
+          font-size: 20px;
+          letter-spacing: 2px;
+          padding: 12px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="email-container">
+      <div class="email-content">
+        <div class="logo">
+          <!-- <img src="http://localhost:7000/public/om_kudrat_logo.svg" alt="App Logo" /> -->
+        </div>
+        <h2>Email Verification Code</h2>
+        <p>Hi {{name}},</p>
+        <p>Here is your Email Verification Code:</p>
+
+        <div class="code-box">{{verificationCode}}</div>
+
+        <p>
+          This code will expire in <b>5 minutes</b>. If you didn’t request this,
+          you can safely ignore this email.
+        </p>
+
+        <a
+          target="_blank"
+          style="
+            display: block;
+            width: 100%;
+            padding: 10px 0;
+            text-align: center;
+            font-size: large;
+            background-color: #018d43;
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            cursor: pointer;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+          "
+          href="http://localhost:5173/verify-code-true/{{userId}}"
+        >
+          <button id="btn">Verify Code</button></a
+        >
+
+        <div class="footer">
+          <p>— The {{appName}} Team</p>
+          <p style="font-size: 12px">
+            © {{year}} {{appName}}. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

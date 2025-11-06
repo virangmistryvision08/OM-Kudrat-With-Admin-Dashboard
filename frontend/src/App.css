@@ -1,0 +1,195 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container,
+.container-fluid,
+.container-lg,
+.container-md,
+.container-sm,
+.container-xl,
+.container-xxl {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  width: 100%;
+  padding-right: calc(var(--bs-gutter-x) * 0) !important;
+  padding-left: calc(var(--bs-gutter-x) * 0) !important;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  background: linear-gradient(to left, #ffffff6a, #ffffff57)
+}
+
+/* index.css */
+@font-face {
+  font-family: 'BelfastGrotesk';
+  src: url('./assets/fonts/belfast-grotesk-semi-bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'BelfastGroteskBold';
+  src: url('./assets/fonts/belfast-grotesk-bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-Medium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+btn {
+  color: #f6feff;
+  background-color: #1bbd30;
+}
+
+
+
+/* Set Checkout Page Background Image Positioning in All Screen */
+.checkout-bg {
+  background-image: url("../public/checkout-background-image.jpg");
+  background-position: 0px -550px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 480px) {
+  .checkout-bg {
+    background-position: center -50px !important;
+  }
+}
+@media ((min-width: 481px) and (max-width: 768px)) {
+  .checkout-bg {
+    background-position: center -250px;
+  }
+}
+@media ((min-width: 769px) and (max-width: 1200px)) {
+  .checkout-bg {
+    background-position: 0 -320px;
+  }
+}
+
+@media ((min-width: 1201px) and (max-width: 1600px)) {
+  .checkout-bg {
+    background-position: center -550px;
+  }
+}
+
+@media ((min-width: 1601px)) {
+  .checkout-bg {
+    background-position: center -600px;
+  }
+}
+
+
+
+/* Set Place-Order Page Background Image Positioning in All Screen */
+.place-order-bg{
+  background-image: url("../public/place-order-background-image.jpg");
+  background-position: 0px -550px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 480px) {
+  .place-order-bg {
+    background-position: center 0px !important;
+  }
+}
+@media ((min-width: 481px) and (max-width: 768px)) {
+  .place-order-bg {
+    background-position: center -60px;
+  }
+}
+@media ((min-width: 769px) and (max-width: 1200px)) {
+  .place-order-bg {
+    background-position: 0 -120px;
+  }
+}
+
+@media ((min-width: 1201px) and (max-width: 1600px)) {
+  .place-order-bg {
+    background-position: center -150px;
+  }
+}
+
+@media ((min-width: 1601px)) {
+  .place-order-bg {
+    background-position: center -250px;
+  }
+}
+
+.blog-bg{
+  background-image: url("../public/blog/blog-background-image.jpg");
+  background-position: 0px -550px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 480px) {
+  .blog-bg {
+    background-position: center 0px !important;
+  }
+}
+@media ((min-width: 481px) and (max-width: 768px)) {
+  .blog-bg {
+    background-position: center -100px;
+  }
+}
+@media ((min-width: 769px) and (max-width: 1200px)) {
+  .blog-bg {
+    background-position: 0 -160px;
+  }
+}
+
+@media ((min-width: 1201px) and (max-width: 1600px)) {
+  .blog-bg {
+    background-position: center -300px;
+  }
+}
+
+@media ((min-width: 1601px)) {
+  .blog-bg {
+    background-position: center -490px;
+  }
+}
+
+.blog-details-bg{
+  background-image: url("../public/blog/blog-details-background-image.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 480px) {
+  .blog-details-bg {
+    background-position: center 0px !important;
+  }
+}
+@media ((min-width: 481px) and (max-width: 768px)) {
+  .blog-details-bg {
+    background-position: center -30px;
+  }
+}
+@media ((min-width: 769px) and (max-width: 1200px)) {
+  .blog-details-bg {
+    background-position: 0 -50px;
+  }
+}
+
+@media ((min-width: 1201px) and (max-width: 1600px)) {
+  .blog-details-bg {
+    background-position: center -100px;
+  }
+}
+
+@media ((min-width: 1601px)) {
+  .blog-details-bg {
+    background-position: center -130px;
+  }
+}
