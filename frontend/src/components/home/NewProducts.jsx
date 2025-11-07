@@ -22,7 +22,7 @@ const NewProducts = () => {
 
   const get_all_products = () => {
     axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/product/get-all-products`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/product/get-all-product`)
       .then((response) => {
         const newProducts = response.data.data.filter((item) => item.productType === "newProducts");
         setProducts([...newProducts]);

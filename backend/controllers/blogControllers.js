@@ -47,7 +47,7 @@ const get_all_blogs = async (req, res) => {
     let { page, blogNameAss, blogNameDiss, blogLimit } = req.query;
 
     page = +page || 1;
-    const limit = blogLimit ? +blogLimit : 5;
+    const limit = blogLimit ? +blogLimit : 9;
     const skip = (page - 1) * limit;
 
     let sort = {};

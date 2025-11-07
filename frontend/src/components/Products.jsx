@@ -31,6 +31,7 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [limit, setLimit] = useState(9);
 
   const handleChange = (event, newValue) => {
     setPriceRange(newValue);
@@ -78,6 +79,7 @@ const Products = () => {
     const queryParams = new URLSearchParams();
 
     queryParams.append("page", currentPage);
+    queryParams.append("productLimit", limit);
 
     if (productIds.length > 0) {
       queryParams.append("productIds", productIds.join(","));

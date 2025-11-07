@@ -23,7 +23,7 @@ import ProductsList from "./pages/OtherPage/ProductsList";
 import CategoriesList from "./pages/OtherPage/Categories";
 import LanguagesList from "./pages/OtherPage/Languages";
 import UsersList from "./pages/OtherPage/usersList";
-import OrdersList from "./pages/OtherPage/OrdersList";
+import OrdersList from "./pages/OtherPage/order/OrdersList";
 import BlogsList from "./pages/OtherPage/blog/BlogsList";
 import AddBlog from "./pages/OtherPage/blog/AddBlog"
 import EditBlog from "./pages/OtherPage/blog/EditBlog";

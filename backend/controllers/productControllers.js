@@ -57,7 +57,7 @@ const get_all_products = async (req, res) => {
       productPriceAss,
       productPriceDiss,
       productIds,
-      productLimit
+      productLimit,
     } = req.query;
 
     page = +page || 1;
@@ -332,7 +332,29 @@ const get_one_product = async (req, res) => {
 
 const get_all_product = async (req, res) => {
   try {
-    const products = await Products.find();
+    const products = await Products.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "categoryinfo",
+        },
+      },
+      {
+        $unwind: "$categoryinfo",
+      },
+      {
+        $addFields: {
+          categoryName: "$categoryinfo.categoryName",
+        },
+      },
+      {
+        $project: {
+          categoryinfo: 0,
+        },
+      },
+    ]);
     if (products.length === 0) {
       return res.status(400).json({
         status: false,
@@ -460,5 +482,5 @@ module.exports = {
   get_all_product,
   get_top_four_trending_products,
   update_product,
-  delete_product
+  delete_product,
 };
