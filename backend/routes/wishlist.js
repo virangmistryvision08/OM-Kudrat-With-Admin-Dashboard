@@ -3,7 +3,7 @@ const { get_all_wishlists, toggle_wishlist } = require("../controllers/wishlistC
 const authToken = require("../authorization/authorize");
 const routes = express.Router();
 
-routes.get("/get-all-wishlists", authToken, get_all_wishlists);
-routes.post("/toggle-wishlist/:productId", authToken, toggle_wishlist);
+routes.get("/get-all-wishlists", authToken(["Admin", "User"]), get_all_wishlists);
+routes.post("/toggle-wishlist/:productId", authToken(["User", "Admin"]), toggle_wishlist);
 
 module.exports = routes;

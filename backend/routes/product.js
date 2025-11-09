@@ -12,6 +12,7 @@ const {
 const routes = express.Router();
 const multer = require("multer");
 const path = require("path");
+const authToken = require("../authorization/authorize");
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -24,7 +25,7 @@ const upload = multer({
   }),
 });
 
-routes.post("/create-product", upload.single("productImage"), create_product);
+routes.post("/create-product", upload.single("productImage"), authToken(["Admin"]), create_product);
 routes.get("/get-all-products", get_all_products); // for Query Products
 routes.get("/get-filtered-products", get_all_filtered_products); // for sidebar of product page
 routes.get("/get-one-product/:id", get_one_product); // for single product
@@ -33,8 +34,9 @@ routes.get("/get-top-four-trending-products", get_top_four_trending_products);
 routes.patch(
   "/update-product/:id",
   upload.single("productImage"),
+  authToken(["Admin"]),
   update_product
 );
-routes.delete("/delete-product/:id", delete_product);
+routes.delete("/delete-product/:id", authToken(["Admin"]), delete_product);
 
 module.exports = routes;

@@ -233,7 +233,7 @@ const Checkout = () => {
                                                         <img className='h-24 w-24 object-contain rounded-xl' src={product.productImage} alt={product.productName} />
                                                         <span className='text-sm md:text-lg font-[BelfastGrotesk]'>{product.productName} x {product.quantity}</span>
                                                     </div>
-                                                    <span className='text-sm md:text-lg text-[#018D43]'>${product.subtotal}</span>
+                                                    <span className='text-sm md:text-lg text-[#018D43]'>${product.subtotal.toFixed(2)}</span>
                                                 </div>
                                                 <Divider />
                                             </div>
