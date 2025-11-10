@@ -7,7 +7,8 @@ const blogSchema = new mongoose.Schema(
     shortDescription: String,
     createdAt: { type: Date, default: Date.now },
     htmlContent: String,
-    by: {type: String, default : "Omkudrat.com"}
+    by: { type: String, default: "Omkudrat.com" },
+    slug: { type: String },
   },
   { timestamps: true }
 );

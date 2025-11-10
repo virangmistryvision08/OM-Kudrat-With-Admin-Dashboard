@@ -11,6 +11,7 @@ const create_product = async (req, res) => {
       category,
       language,
       productType,
+      slug
     } = req.body;
 
     if (!req.file) {
@@ -26,6 +27,7 @@ const create_product = async (req, res) => {
         message: "This Product Already Exist!",
       });
     }
+
     await Products.create({
       productImage: `${process.env.BACKEND_URL}/product/products/${req.file.filename}`,
       productName,
@@ -34,6 +36,7 @@ const create_product = async (req, res) => {
       category,
       language,
       productType,
+      slug
     });
     return res
       .status(201)
@@ -267,17 +270,11 @@ const get_all_filtered_products = async (req, res) => {
 
 const get_one_product = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res
-        .status(400)
-        .json({ status: false, message: "Invalid Product ID" });
-    }
+    const { slug } = req.params;
 
     const product = await Products.aggregate([
       {
-        $match: { _id: new mongoose.Types.ObjectId(id) },
+        $match: { slug: slug },
       },
       {
         $lookup: {
@@ -385,6 +382,7 @@ const get_top_four_trending_products = async (req, res) => {
             productImage: { $first: "$cartProducts.productImage" },
             productOldPrice: { $first: "$cartProducts.productOldPrice" },
             productNewPrice: { $first: "$cartProducts.productNewPrice" },
+            slug: { $first: "$cartProducts.slug" },
             totalOrder: { $sum: 1 },
           },
         },
@@ -424,7 +422,7 @@ const get_top_four_trending_products = async (req, res) => {
 const update_product = async (req, res) => {
   try {
     const { id } = req.params;
-    const { productName, productNewPrice, category, language } = req.body;
+    const { productName, productNewPrice, category, language, slug } = req.body;
 
     const findProduct = await Products.findOne({ _id: id });
 
@@ -444,6 +442,7 @@ const update_product = async (req, res) => {
       productNewPrice,
       category,
       language,
+      slug
     });
     return res
       .status(200)

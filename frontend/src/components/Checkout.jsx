@@ -24,8 +24,6 @@ const Checkout = () => {
     const { totalAmount } = location.state || {};
     const {carts} = useCart();
 
-    console.log(totalAmount,'totalAmount 26')
-
     const [form, setForm] = useState({
         firstName: '',
         lastName: '',

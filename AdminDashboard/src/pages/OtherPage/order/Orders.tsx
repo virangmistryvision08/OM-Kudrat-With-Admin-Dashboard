@@ -14,6 +14,7 @@ import {
   Stack,
   Pagination,
 } from "@mui/material";
+import cookie from "js-cookie";
 
 interface Product {
   productImage: string;
@@ -30,6 +31,7 @@ interface Order {
   amount: number;
   status: string;
   createdAt: string;
+  orderId: string;
 }
 
 const Orders: React.FC = ({ limit, filter, setlimit }) => {
@@ -38,6 +40,7 @@ const Orders: React.FC = ({ limit, filter, setlimit }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(10);
   const [totalProducts, setTotalProducts] = useState(null);
+  const [token, setToken] = useState(cookie.get(`${import.meta.env.VITE_COOKIE_TOKEN_NAME}`));
 
   const toggleRow = (id: string) => {
     setExpandedRow(expandedRow === id ? null : id);
@@ -45,7 +48,7 @@ const Orders: React.FC = ({ limit, filter, setlimit }) => {
 
   useEffect(() => {
     get_all_orders(currentPage, limit);
-  }, [currentPage, limit, filter]);
+  }, [currentPage, limit, filter, token]);
 
   const get_all_orders = async (currentPage: number, limit: number) => {
     setOrders([]);
@@ -58,10 +61,10 @@ const Orders: React.FC = ({ limit, filter, setlimit }) => {
       .get(
         `${
           import.meta.env.VITE_BACKEND_URL
-        }/orders/get-all-orders?${queryParams.toString()}`
+        }/orders/get-all-orders?${queryParams.toString()}`,
+        { headers: { Authorization: `Bearer ${token}` } }
       )
       .then((res) => {
-        
         if (res.data.data.length === 0 && currentPage > 1) {
           setCurrentPage((prev) => prev - 1);
           return;
@@ -105,6 +108,9 @@ const Orders: React.FC = ({ limit, filter, setlimit }) => {
                 </TableCell>
                 <TableCell className="font-semibold !font-[Poppins] dark:!text-white/90">
                   User Email
+                </TableCell>
+                <TableCell className="font-semibold !font-[Poppins] dark:!text-white/90">
+                  Order ID
                 </TableCell>
                 <TableCell
                   className="font-semibold !font-[Poppins] dark:!text-white/90"
@@ -161,6 +167,9 @@ const Orders: React.FC = ({ limit, filter, setlimit }) => {
                         </TableCell>
                         <TableCell className=" !font-[Poppins] dark:!text-white/90">
                           {order.userEmail}
+                        </TableCell>
+                        <TableCell className=" !font-[Poppins] dark:!text-white/90">
+                          {order.orderId}
                         </TableCell>
                         <TableCell
                           className=" !font-[Poppins] dark:!text-white/90"
@@ -318,17 +327,24 @@ const Orders: React.FC = ({ limit, filter, setlimit }) => {
       )}
 
       <div className="flex justify-end mt-5">
-          <div className="flex gap-2">
-            <select defaultValue={limit} onChange={(e) => setlimit(e.target.value)} className="border border-gray-600" name="" id="">
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
-              <option value="20">20</option>
-            </select>
+        <div className="flex gap-2">
+          Order
+          <select
+            defaultValue={limit}
+            onChange={(e) => setlimit(e.target.value)}
+            className="border border-gray-600"
+            name=""
+            id=""
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+          </select>
 
-            <h1>of {totalProducts}</h1>
-          </div>
+          <h1>of {totalProducts}</h1>
         </div>
+      </div>
     </>
   );
 };

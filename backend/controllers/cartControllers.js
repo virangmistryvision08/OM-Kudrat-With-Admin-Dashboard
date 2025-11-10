@@ -37,6 +37,7 @@ const get_all_carts = async (req, res) => {
                 productImage: "$product.productImage",
                 productOldPrice: "$product.productOldPrice",
                 productNewPrice: "$product.productNewPrice",
+                slug: "$product.slug",
                 quantity: "$items.quantity",
                 subtotal: "$totalItemPrice",
               },

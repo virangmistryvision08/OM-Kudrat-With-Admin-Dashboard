@@ -92,7 +92,7 @@ const get_dashboard_stats = async () => {
               Revenue
             </span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              {totalRevenue}
+              ${totalRevenue}
             </h4>
           </div>
 

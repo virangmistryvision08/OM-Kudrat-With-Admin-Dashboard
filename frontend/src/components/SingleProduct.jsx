@@ -59,7 +59,7 @@ function a11yProps(index) {
 const SingleProduct = () => {
   const theme = useTheme();
   const [value, setValue] = useState(0);
-  const { id } = useParams();
+  const { slug } = useParams();
   const [singleProduct, setSingleProduct] = useState({});
   const { wishlists, toggleWishlist } = useWishlist();
   const { carts, handleIncrement, handleDecrement, handleAddToCart } = useCart();
@@ -69,11 +69,11 @@ const SingleProduct = () => {
 
   useEffect(() => {
     getOneProduct();
-  }, [id]);
+  }, [slug]);
 
   const getOneProduct = () => {
     axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/product/get-one-product/${id}`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/product/get-one-product/${slug}`)
       .then((res) => {
         setSingleProduct(res.data.data);
         setImages([

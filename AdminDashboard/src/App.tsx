@@ -50,7 +50,7 @@ export default function App() {
             <Route path="/orders" element={<OrdersList />} />
             <Route path="/blogs" element={<BlogsList />} />
             <Route path="/blogs/add-blog" element={<AddBlog/>} />
-            <Route path="/blogs/update-blog/:id" element={<EditBlog />} />
+            <Route path="/blogs/update-blog/:slug" element={<EditBlog />} />
 
             {/* Forms */}
             <Route path="/form-elements" element={<FormElements />} />

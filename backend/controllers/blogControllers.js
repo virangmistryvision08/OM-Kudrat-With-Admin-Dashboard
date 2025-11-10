@@ -3,7 +3,7 @@ const Blog = require("../models/blogModel");
 
 const create_blog = async (req, res) => {
   try {
-    const { blogName, htmlContent, by } = req.body;
+    const { blogName, htmlContent, by, slug } = req.body;
     if (
       [blogName, htmlContent].some(
         (item) => item === "" || item === undefined
@@ -33,6 +33,7 @@ const create_blog = async (req, res) => {
       blogImage: `${process.env.BACKEND_URL}/product/blogs/${req.file.filename}`,
       htmlContent,
       by,
+      slug
     });
     return res
       .status(201)
@@ -117,11 +118,11 @@ const top_three_latest_blogs = async (req, res) => {
 
 const other_blogs = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { slug } = req.params;
     const other_blogs = await Blog.aggregate([
       {
         $match: {
-          _id: { $ne: new mongoose.Types.ObjectId(id) },
+          slug: { $ne: slug },
         },
       },
       {
@@ -141,8 +142,8 @@ const other_blogs = async (req, res) => {
 
 const get_one_blog = async (req, res) => {
   try {
-    const { id } = req.params;
-    const blog = await Blog.findOne({ _id: id });
+    const { slug } = req.params;
+    const blog = await Blog.findOne({ slug });
 
     if (!blog) {
       return res.status(404).json({
@@ -182,10 +183,10 @@ const delete_blog = async (req, res) => {
 
 const update_blog = async (req, res) => {
   try {
-    const { blogName, htmlContent, by } = req.body;
-    const { id } = req.params;
+    const { blogName, htmlContent, by, slug } = req.body;
+    const { slugName } = req.params;
 
-    const verifyBlog = await Blog.findOne({ _id: id });
+    const verifyBlog = await Blog.findOne({ slug: slugName });
     if (!verifyBlog) {
       return res.status(404).json({
         status: false,
@@ -198,6 +199,7 @@ const update_blog = async (req, res) => {
       blogImage: req.file ? `${process.env.BACKEND_URL}/product/blogs/${req.file.filename}` : verifyBlog.blogImage,
       htmlContent,
       by,
+      slug
     });
     return res
       .status(200)

@@ -10,17 +10,17 @@ import Footer from "./Footer";
 const SingleBlog = () => {
   const [blog, setBlog] = useState({});
   const [otherBlogs, setOtherBlogs] = useState([]);
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     get_single_blog();
     get_other_blogs();
-  }, [id]);
+  }, [slug]);
 
   const get_single_blog = () => {
     axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/blog/get-one-blog/${id}`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/blog/get-one-blog/${slug}`)
       .then((res) => {
         setBlog({ ...res.data.data });
       })
@@ -31,7 +31,7 @@ const SingleBlog = () => {
 
   const get_other_blogs = () => {
     axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/blog/other-blogs/${id}`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/blog/other-blogs/${slug}`)
       .then((res) => {
         setOtherBlogs([...res.data.data]);
       })
@@ -238,7 +238,7 @@ const SingleBlog = () => {
                       }}
                     ></p>
                     <button
-                      onClick={() => navigate(`/blog/${blg._id}`)}
+                      onClick={() => navigate(`/blog/${blg.slug}`)}
                       className="px-7 py-3 bg-[#018D43] text-white rounded-full w-fit"
                     >
                       Read More

@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 
-// Pass allowed roles as an array, e.g., ["Admin"]
 const authToken = (rolesAllowed = []) => {
   return (req, res, next) => {
     const { authorization } = req.headers;
@@ -14,11 +13,8 @@ const authToken = (rolesAllowed = []) => {
       if (err) {
         return res.status(403).json({ message: "UnAuthorize User!" });
       }
-
-      // Attach user to request
       req.user = user;
 
-      // If roles are specified, check if user role is allowed
       if (rolesAllowed.length && !rolesAllowed.includes(user.role)) {
         return res.status(403).json({ message: "UnAuthorize User!" });
       }

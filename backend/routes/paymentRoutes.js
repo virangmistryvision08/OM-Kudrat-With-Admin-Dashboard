@@ -27,7 +27,7 @@ router.post("/create-payment-intent", async (req, res) => {
       currency,
       payment_method_types: ["card"],
       metadata: {
-        orderId: newOrder._id.toString(),
+        orderId: newOrder.orderId,
         userId: newOrder.userId.toString(),
         billingDetails: JSON.stringify(billingDetails),
         deliveryDetails: JSON.stringify(deliveryDetails),

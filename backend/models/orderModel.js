@@ -6,6 +6,10 @@ const orderSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: "User",
   },
+  orderId: {
+    type: String,
+    unique: true,
+  },
   email: String,
   billingDetails: Object,
   deliveryDetails: Object,
@@ -15,6 +19,15 @@ const orderSchema = new mongoose.Schema({
   status: String,
   createdAt: { type: Date, default: Date.now },
 });
+
+orderSchema.pre("save", async function (next) {
+  if (!this.orderId) {
+    const count = await mongoose.model("Order").countDocuments();
+    this.orderId = `ORD-${new Date().getFullYear()}-${String(count + 1).padStart(5, "0")}`;
+  }
+  next();
+});
+
 
 const Order = mongoose.model("Order", orderSchema);
 

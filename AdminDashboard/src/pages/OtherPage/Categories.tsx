@@ -12,6 +12,7 @@ import { Modal } from "../../components/ui/modal";
 import Alert from "../../components/ui/alert/Alert";
 import PageMeta from "../../components/common/PageMeta";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
+import cookie from "js-cookie"
 
 interface Category {
   id: string;
@@ -30,6 +31,9 @@ const CategoriesList: React.FC = () => {
   );
   const [categoryNameInput, setCategoryNameInput] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
+  const [token, setToken] = useState(
+    cookie.get(`${import.meta.env.VITE_COOKIE_TOKEN_NAME}`)
+  );
 
   const [alert, setAlert] = useState<{
     show: boolean;
@@ -88,9 +92,13 @@ const CategoriesList: React.FC = () => {
     }
 
     axios
-      .post(`${import.meta.env.VITE_BACKEND_URL}/category/create-category`, {
-        categoryName: trimmedName,
-      })
+      .post(
+        `${import.meta.env.VITE_BACKEND_URL}/category/create-category`,
+        {
+          categoryName: trimmedName,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       .then((res) => {
         setIsModalOpen(false);
         setCategoryNameInput("");
@@ -121,7 +129,8 @@ const CategoriesList: React.FC = () => {
         `${import.meta.env.VITE_BACKEND_URL}/category/update-category/${
           selectedCategory.id
         }`,
-        { categoryName: trimmedName }
+        { categoryName: trimmedName },
+        { headers: { Authorization: `Bearer ${token}` } }
       )
       .then((res) => {
         setIsModalOpen(false);
@@ -147,7 +156,8 @@ const CategoriesList: React.FC = () => {
       .delete(
         `${import.meta.env.VITE_BACKEND_URL}/category/delete-category/${
           selectedCategory.id
-        }`
+        }`,
+        { headers: { Authorization: `Bearer ${token}` } }
       )
       .then((res) => {
         setIsModalOpen(false);
@@ -174,7 +184,6 @@ const CategoriesList: React.FC = () => {
       <PageBreadcrumb pageTitle="Categories" />
 
       <div className="rounded-2xl border border-gray-200 bg-white !px-7 !py-7 dark:border-gray-800 dark:bg-white/[0.03] xl:px-10 xl:py-12">
-        
         <div className="fixed top-4 right-4 z-999999">
           {alert.show && (
             <Alert

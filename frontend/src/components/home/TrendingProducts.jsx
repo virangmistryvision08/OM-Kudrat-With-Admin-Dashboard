@@ -51,7 +51,7 @@ const TrendingProducts = () => {
                 <div className="flex items-center gap-3 xl:gap-5">
                   <div
                     onClick={() => {
-                      navigate(`/products/${product.productId}`);
+                      navigate(`/products/${product.slug}`);
                     }}
                     style={{
                       backgroundImage: `url("${product.productImage}")`,
@@ -66,7 +66,7 @@ const TrendingProducts = () => {
                   </div>
                   <div className="flex flex-col gap-1">
                     <p onClick={() => {
-                        navigate(`/products/${product.productId}`)
+                        navigate(`/products/${product.slug}`)
                     }} className="font-semibold cursor-pointer m-0 text-sm xl:text-lg">
                       {product.productName}
                     </p>

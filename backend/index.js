@@ -16,6 +16,7 @@ const blog = require("./routes/blogRoute");
 const admin = require("./routes/adminRoutes");
 const orders = require("./routes/orderRoutes");
 const dashboard = require("./routes/dashboardRoutes");
+const contactUs = require("./routes/contactUsRoutes");
 
 app.use("/api/payment/webhook", express.raw({ type: "application/json" }), stripeWebhook);
 app.use(cors());
@@ -33,6 +34,7 @@ app.use("/blog", blog);
 app.use("/admin", admin);
 app.use("/orders", orders);
 app.use("/dashboard", dashboard);
+app.use("/contact-us", contactUs);
 
 app.listen(port, () => {
   console.log("Server Started At PORT -", port);

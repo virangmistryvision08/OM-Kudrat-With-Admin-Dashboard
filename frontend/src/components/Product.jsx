@@ -15,6 +15,7 @@ const Product = ({
   bestSellingProduct,
   showWishlist,
   showArrow,
+  slug
 }) => {
   const navigate = useNavigate();
   const { wishlists, toggleWishlist } = useWishlist();
@@ -30,7 +31,7 @@ const Product = ({
       } duration-200 bg-white`}
     >
       <div
-        onClick={() => navigate(`/products/${productId}`)}
+        onClick={() => navigate(`/products/${slug}`)}
         className={`relative cursor-pointer w-full aspect-square overflow-hidden ${
           showWishlist ? "rounded-xl" : "rounded-3xl"
         } mb-3`}

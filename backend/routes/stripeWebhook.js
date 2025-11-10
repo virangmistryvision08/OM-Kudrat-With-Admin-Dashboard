@@ -32,13 +32,12 @@ router.post(
         const orderId = paymentIntent.metadata?.orderId;
         if (!orderId) throw new Error("Order ID not found in metadata");
 
-        const order = await Order.findById(orderId);
+        const order = await Order.findOne({ orderId });
         if (!order) throw new Error("Order not found in database");
 
         order.status = "paid";
         order.paymentIntentId = paymentIntent.id;
         await order.save();
-
 
         if (userId) {
           const objectId = mongoose.Types.ObjectId.isValid(userId)

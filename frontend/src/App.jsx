@@ -53,7 +53,7 @@ function App() {
         <Route path='/reset-password/:id' element={<ResetPassword />} />
         <Route path='/home' element={<Navigate to="/" />} />
         <Route path='/products' element={<Products />} />
-        <Route path='/products/:id' element={<SingleProduct />} />
+        <Route path='/products/:slug' element={<SingleProduct />} />
         <Route path='/about-us' element={<AboutUs />} />
         <Route path='/contact-us' element={<ContactUs />} />
         <Route path='/cart-details' element={<CartDetails />} />
@@ -64,7 +64,7 @@ function App() {
         <Route path='/failed-payment' element={<Payment_Failed />} />
         <Route path='/faqs' element={<FAQS />} />
         <Route path='/blog' element={<Blogs />} />
-        <Route path='/blog/:id' element={<SingleBlog />} />
+        <Route path='/blog/:slug' element={<SingleBlog />} />
       </Routes>
 
 

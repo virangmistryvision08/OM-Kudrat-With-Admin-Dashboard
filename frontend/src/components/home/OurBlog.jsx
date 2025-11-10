@@ -38,8 +38,8 @@ const OurBlog = () => {
                 blogs.map((blog) => {
                     return (
                         <div key={blog._id} className="rounded-2xl h-fit">
-                            <img onClick={() => navigate(`/blog/${blog._id}`)} className="h-[300px] w-[100%] object-cover rounded-2xl cursor-pointer" src={blog.blogImage} alt={blog.blogName} />
-                            <p onClick={() => navigate(`/blog/${blog._id}`)} className="font-semibold text-xl mt-2 mb-2 line-clamp-2 font-[BelfastGrotesk] cursor-pointer">{blog.shortDescription}</p>
+                            <img onClick={() => navigate(`/blog/${blog.slug}`)} className="h-[300px] w-[100%] object-cover rounded-2xl cursor-pointer" src={blog.blogImage} alt={blog.blogName} />
+                            <p onClick={() => navigate(`/blog/${blog.slug}`)} className="font-semibold text-xl mt-2 mb-2 line-clamp-2 font-[BelfastGrotesk] cursor-pointer">{blog.blogName}</p>
                             <span className="text-gray-500 text-sm">By {blog.by} | {format(new Date(blog.createdAt), "MMM dd, yyyy")}</span>
                         </div>
                     )

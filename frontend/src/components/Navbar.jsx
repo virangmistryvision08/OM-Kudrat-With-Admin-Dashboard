@@ -638,10 +638,10 @@ const NavOmKudrat = () => {
                             {/* For Mobile Screen Only */}
                             <div className="flex items-center gap-5 my-2 md:hidden">
                               <span className="text-sm text-gray-300 line-through">
-                                {cart.productOldPrice.toFixed(2)}
+                                {cart.productOldPrice?.toFixed(2)}
                               </span>
                               <div className="text-[#018D43] text-lg">
-                                {cart.productNewPrice.toFixed(2)} x{" "}
+                                {cart.productNewPrice?.toFixed(2)} x{" "}
                                 {cart.quantity}
                               </div>
                             </div>
@@ -683,7 +683,7 @@ const NavOmKudrat = () => {
                   <div className="flex justify-between text-lg font-[BelfastGroteskBold] !font-[600]">
                     <h1>Sub Total</h1>
                     <h1 className="text-[#018D43]">
-                      ${carts[0]?.totalCartValue.toFixed(2)}
+                      ${carts[0]?.totalCartValue?.toFixed(2)}
                     </h1>
                   </div>
                 ))}

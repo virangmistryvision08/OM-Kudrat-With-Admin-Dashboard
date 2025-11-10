@@ -16,6 +16,7 @@ import { useNavigate } from "react-router";
 import { Modal } from "../../../components/ui/modal";
 import Alert from "../../../components/ui/alert/Alert";
 import DOMPurify from "dompurify";
+import cookie from "js-cookie";
 
 interface Blog {
   id: string;
@@ -24,6 +25,7 @@ interface Blog {
   blogImage: string;
   htmlContent: string;
   createdAt: string;
+  slug: string;
 }
 
 interface BlogsResponse {
@@ -45,6 +47,9 @@ const BlogsList: React.FC = () => {
     message: string;
   } | null>(null);
   const [limit, setLimit] = useState(5);
+    const [token, setToken] = useState(
+      cookie.get(`${import.meta.env.VITE_COOKIE_TOKEN_NAME}`)
+    );
 
   useEffect(() => {
     getAllBlogs(currentPage, limit);
@@ -107,7 +112,7 @@ const BlogsList: React.FC = () => {
 
     axios
       .delete(
-        `${import.meta.env.VITE_BACKEND_URL}/blog/delete-blog/${blogToDelete}`
+        `${import.meta.env.VITE_BACKEND_URL}/blog/delete-blog/${blogToDelete}`, { headers: { Authorization: `Bearer ${token}` } }
       )
       .then((res) => {
         getAllBlogs(currentPage, limit);
@@ -225,7 +230,7 @@ const BlogsList: React.FC = () => {
                     <TableCell className="px-6 py-4 text-left flex justify-center items-center gap-3 whitespace-nowrap">
                       <button
                         onClick={() =>
-                          navigate(`/blogs/update-blog/${blog._id}`)
+                          navigate(`/blogs/update-blog/${blog.slug}`)
                         }
                         className="rounded bg-blue-500 hover:bg-blue-600 transition-colors duration-200 h-10 w-10 text-white"
                       >
@@ -280,8 +285,9 @@ const BlogsList: React.FC = () => {
           </div>
         )}
 
-        <div className="text-end mt-4">
-          <select defaultValue={5} dir="rtl" onChange={changeLimit} name="productLimit" id="">
+        <div className="mt-4 flex items-center justify-end gap-2">
+          Blog
+          <select className=" border border-gray-600" defaultValue={5} dir="rtl" onChange={changeLimit} name="productLimit" id="">
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="15">15</option>

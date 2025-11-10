@@ -516,6 +516,7 @@ const Products = () => {
                       bestSellingProduct={false}
                       showWishlist={true}
                       showArrow={true}
+                      slug={product.slug}
                     />
                   ))
                 )}

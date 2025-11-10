@@ -16,6 +16,7 @@ const productSchema = new mongoose.Schema(
       ref: "Language",
     },
     productType: { type: String },
+    slug: { type: String },
   },
   { timestamps: true }
 );

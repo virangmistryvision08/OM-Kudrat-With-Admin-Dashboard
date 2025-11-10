@@ -20,8 +20,8 @@ routes.post("/create-blog", upload.single("blogImage"), authToken(["Admin"]), cr
 routes.get("/get-all-blogs", get_all_blogs);
 routes.get("/top-three-latest-blogs", top_three_latest_blogs);
 routes.get("/other-blogs/:id", other_blogs);
-routes.get("/get-one-blog/:id", get_one_blog);
+routes.get("/get-one-blog/:slug", get_one_blog);
 routes.delete("/delete-blog/:id", authToken(["Admin"]), delete_blog);
-routes.patch("/update-blog/:id", upload.single("blogImage"), authToken(["Admin"]), update_blog);
+routes.patch("/update-blog/:slugName", upload.single("blogImage"), authToken(["Admin"]), update_blog);
 
 module.exports = routes;

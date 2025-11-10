@@ -7,17 +7,20 @@ import Input from "../../../components/form/input/InputField";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import Alert from "../../../components/ui/alert/Alert";
+import cookie from "js-cookie";
 
 interface FormData {
   blogName: string;
   htmlContent: string;
   blogImage: File | null;
+  slug: string;
 }
 
 interface FormErrors {
   blogName?: string;
   htmlContent?: string;
   blogImage?: string;
+  slug: string;
 }
 
 const AddBlog: React.FC = () => {
@@ -25,6 +28,7 @@ const AddBlog: React.FC = () => {
     blogName: "",
     htmlContent: "",
     blogImage: null,
+    slug: "",
   });
   const navigate = useNavigate();
   const [alert, setAlert] = useState<{
@@ -32,6 +36,9 @@ const AddBlog: React.FC = () => {
     title: string;
     message: string;
   } | null>(null);
+  const [token, setToken] = useState(
+    cookie.get(`${import.meta.env.VITE_COOKIE_TOKEN_NAME}`)
+  );
 
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -85,6 +92,7 @@ const AddBlog: React.FC = () => {
     if (!formData.htmlContent.trim())
       newErrors.htmlContent = "Content is required!";
     if (!formData.blogImage) newErrors.blogImage = "Blog image is required!";
+    if (!formData.slug) newErrors.slug = "Blog Slug is required!";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -96,14 +104,15 @@ const AddBlog: React.FC = () => {
     const payload = new FormData();
     payload.append("blogName", formData.blogName);
     payload.append("htmlContent", formData.htmlContent);
+    payload.append("slug", formData.slug);
     if (formData.blogImage) payload.append("blogImage", formData.blogImage);
 
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/blog/create-blog`,
-        payload
+        payload,
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      console.log("Blog created:", response.data);
       navigate("/blogs");
       setAlert({
         variant: "success",
@@ -114,6 +123,7 @@ const AddBlog: React.FC = () => {
         blogName: "",
         htmlContent: "",
         blogImage: null,
+        slug:""
       });
     } catch (error) {
       console.error("Error creating blog:", error);
@@ -172,6 +182,23 @@ const AddBlog: React.FC = () => {
 
           <div>
             <label
+              htmlFor="slug"
+              className="font-medium text-gray-700 dark:text-gray-300"
+            >
+              Slug
+            </label>
+            <Input
+              id="slug"
+              placeholder="Enter slug"
+              value={formData.slug}
+              onChange={(e) => handleInputChange(e, "slug")}
+              error={!!errors.slug}
+              hint={errors.slug}
+            />
+          </div>
+
+          <div>
+            <label
               htmlFor="blogImage"
               className="font-medium text-gray-700 dark:text-gray-300"
             >
@@ -201,7 +228,7 @@ const AddBlog: React.FC = () => {
               Blog Content
             </label>
             <ReactQuill
-            className="dark:!placeholder-gray-200"
+              className="dark:!placeholder-gray-200"
               theme="snow"
               value={formData.htmlContent}
               onChange={(value) =>

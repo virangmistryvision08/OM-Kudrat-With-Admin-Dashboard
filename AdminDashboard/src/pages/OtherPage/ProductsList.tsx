@@ -16,6 +16,7 @@ import Label from "../../components/form/Label";
 import Select from "../../components/form/Select";
 import FileInput from "../../components/form/input/FileInput";
 import Alert from "../../components/ui/alert/Alert";
+import cookie from "js-cookie";
 
 interface Product {
   id: string;
@@ -26,6 +27,7 @@ interface Product {
   categoryName: string;
   languageId?: string;
   categoryId?: string;
+  slug: string;
 }
 
 const ProductsList: React.FC = () => {
@@ -46,6 +48,9 @@ const ProductsList: React.FC = () => {
     message: string;
   } | null>(null);
   const [limit, setLimit] = useState(5);
+  const [token, setToken] = useState(
+    cookie.get(`${import.meta.env.VITE_COOKIE_TOKEN_NAME}`)
+  );
 
   // === Form states ===
   const [formData, setFormData] = useState({
@@ -55,6 +60,7 @@ const ProductsList: React.FC = () => {
     category: "",
     file: null as File | null,
     existingImage: "",
+    slug: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -81,6 +87,7 @@ const ProductsList: React.FC = () => {
       category: product.categoryId || "",
       file: null,
       existingImage: product.productImage,
+      slug: product.slug,
     });
   };
 
@@ -94,8 +101,10 @@ const ProductsList: React.FC = () => {
     else {
       axios
         .delete(
-          `${import.meta.env.VITE_BACKEND_URL
-          }/product/delete-product/${productToDelete}`
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/product/delete-product/${productToDelete}`,
+          { headers: { Authorization: `Bearer ${token}` } }
         )
         .then(() => {
           setDeleteModalOpen(false);
@@ -108,6 +117,7 @@ const ProductsList: React.FC = () => {
           });
         })
         .catch((error) => {
+          setDeleteModalOpen(false);
           setAlert({
             variant: "error",
             title: "Error!",
@@ -126,7 +136,6 @@ const ProductsList: React.FC = () => {
         `${import.meta.env.VITE_BACKEND_URL}/language/get-all-languages`
       );
       if (res.data?.data) {
-        console.log(res.data.data, "response Language");
         const formatted = res.data.data.map((lang: any) => ({
           value: lang._id,
           label: lang.languageName,
@@ -149,7 +158,6 @@ const ProductsList: React.FC = () => {
           value: cat._id,
           label: cat.categoryName,
         }));
-        console.log(formatted, "response Category");
         setCategoryOptions(formatted);
       }
     } catch (error) {
@@ -175,7 +183,8 @@ const ProductsList: React.FC = () => {
 
     axios
       .get(
-        `${import.meta.env.VITE_BACKEND_URL
+        `${
+          import.meta.env.VITE_BACKEND_URL
         }/product/get-all-products?${queryParams.toString()}`
       )
       .then((res) => {
@@ -192,6 +201,7 @@ const ProductsList: React.FC = () => {
             item.category?.categoryName || item.categoryName || "Uncategorized",
           languageId: item.languageId || "",
           categoryId: item.categoryId || "",
+          slug: item.slug,
         }));
 
         if (formattedData.length === 0 && currentPage > 1) {
@@ -233,7 +243,12 @@ const ProductsList: React.FC = () => {
     e.preventDefault();
     const newErrors: Record<string, string> = {};
 
+    
+
+    console.log(formData,'formData');
+
     if (!formData.name.trim()) newErrors.name = "Product name is required.";
+    if (!formData.slug.trim()) newErrors.slug = "Product slug is required.";
     if (!formData.price) newErrors.price = "Product price is required.";
     if (!formData.language) newErrors.language = "Please select a language.";
     if (!formData.category) newErrors.category = "Please select a category.";
@@ -246,6 +261,7 @@ const ProductsList: React.FC = () => {
 
     const uploadData = new FormData();
     uploadData.append("productName", formData.name);
+    uploadData.append("slug", formData.slug);
     uploadData.append("productNewPrice", formData.price);
     uploadData.append("language", formData.language);
     uploadData.append("category", formData.category);
@@ -257,9 +273,11 @@ const ProductsList: React.FC = () => {
     try {
       if (isEditMode && editProductId) {
         await axios.patch(
-          `${import.meta.env.VITE_BACKEND_URL
+          `${
+            import.meta.env.VITE_BACKEND_URL
           }/product/update-product/${editProductId}`,
-          uploadData
+          uploadData,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         setAlert({
           variant: "info",
@@ -269,7 +287,8 @@ const ProductsList: React.FC = () => {
       } else {
         await axios.post(
           `${import.meta.env.VITE_BACKEND_URL}/product/create-product`,
-          uploadData
+          uploadData,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         setAlert({
           variant: "success",
@@ -286,20 +305,22 @@ const ProductsList: React.FC = () => {
         category: "",
         file: null,
         existingImage: "",
+        slug: "",
       });
       get_all_products(currentPage, limit);
     } catch (err) {
+      setIsModalOpen(false);
       console.error(err);
       setAlert({
         variant: "error",
         title: "Error!",
-        message: "Something went wrong. Please try again.",
+        message: err.response ? err.response.data.message : err.message,
       });
     }
   };
 
   const changeProduct = (e: number) => {
-    setLimit(+e.target.value)
+    setLimit(+e.target.value);
     get_all_products(currentPage, limit);
   };
 
@@ -429,9 +450,7 @@ const ProductsList: React.FC = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell
-                      className="text-center py-6 text-gray-500"
-                    >
+                    <TableCell className="text-center py-6 text-gray-500">
                       No products found.
                     </TableCell>
                   </TableRow>
@@ -474,8 +493,16 @@ const ProductsList: React.FC = () => {
           </div>
         )}
 
-        <div className="text-end mt-4">
-          <select className=" border border-gray-600" defaultValue={5} dir="rtl" onChange={changeProduct} name="productLimit" id="">
+        <div className="mt-4 flex items-center justify-end gap-2">
+          Product
+          <select
+            className=" border border-gray-600"
+            defaultValue={5}
+            dir="rtl"
+            onChange={changeProduct}
+            name="productLimit"
+            id=""
+          >
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="15">15</option>
@@ -496,7 +523,8 @@ const ProductsList: React.FC = () => {
             language: "",
             category: "",
             file: null,
-            existingImage: "", // 👈 add this line
+            existingImage: "",
+            slug: "",
           });
           setIsEditMode(false);
           setErrors({});
@@ -513,12 +541,26 @@ const ProductsList: React.FC = () => {
               <input
                 type="text"
                 value={formData.name}
-                placeholder="Enter Product Name"
+                placeholder="Enter product name"
                 onChange={(e) => handleChange("name", e.target.value)}
                 className="mb-1 w-full border p-2 rounded dark:placeholder:!text-white dark:!text-white"
               />
               {errors.name && (
                 <p className="text-sm text-red-500">{errors.name}</p>
+              )}
+            </div>
+
+            <div>
+              <Label>Product Slug</Label>
+              <input
+                type="text"
+                value={formData.slug}
+                placeholder="eg. :- enter-product-name"
+                onChange={(e) => handleChange("slug", e.target.value)}
+                className="mb-1 w-full border p-2 rounded dark:placeholder:!text-white dark:!text-white"
+              />
+              {errors.slug && (
+                <p className="text-sm text-red-500">{errors.slug}</p>
               )}
             </div>
 
@@ -587,7 +629,7 @@ const ProductsList: React.FC = () => {
                       {formData.file
                         ? formData.file.name
                         : products.find((p) => p.id === editProductId)
-                          ?.productName}
+                            ?.productName}
                     </span>
                   </div>
                 </div>

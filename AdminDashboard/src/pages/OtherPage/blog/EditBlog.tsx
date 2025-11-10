@@ -7,17 +7,20 @@ import Input from "../../../components/form/input/InputField";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router";
 import Alert from "../../../components/ui/alert/Alert";
+import cookie from "js-cookie";
 
 interface FormData {
   blogName: string;
   htmlContent: string;
   blogImage: File | null;
+  slug: string;
 }
 
 interface FormErrors {
   blogName?: string;
   htmlContent?: string;
   blogImage?: string;
+  slug: string;
 }
 
 const EditBlog: React.FC = () => {
@@ -25,6 +28,7 @@ const EditBlog: React.FC = () => {
     blogName: "",
     htmlContent: "",
     blogImage: null,
+    slug: "",
   });
   const navigate = useNavigate();
   const [alert, setAlert] = useState<{
@@ -32,7 +36,10 @@ const EditBlog: React.FC = () => {
     title: string;
     message: string;
   } | null>(null);
-  const { id } = useParams();
+  const { slug } = useParams();
+  const [token, setToken] = useState(
+    cookie.get(`${import.meta.env.VITE_COOKIE_TOKEN_NAME}`)
+  );
 
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -45,11 +52,11 @@ const EditBlog: React.FC = () => {
 
   useEffect(() => {
     get_single_blog();
-  }, [id]);
+  }, [slug]);
 
   const get_single_blog = () => {
     axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/blog/get-one-blog/${id}`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/blog/get-one-blog/${slug}`)
       .then((res) => {
         setFormData({ ...res.data.data });
       })
@@ -100,6 +107,7 @@ const EditBlog: React.FC = () => {
     if (!formData.htmlContent.trim())
       newErrors.htmlContent = "Content is required!";
     if (!formData.blogImage) newErrors.blogImage = "Blog image is required!";
+    if (!formData.slug) newErrors.slug = "Blog slug is required!";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -110,12 +118,14 @@ const EditBlog: React.FC = () => {
     const payload = new FormData();
     payload.append("blogName", formData.blogName);
     payload.append("htmlContent", formData.htmlContent);
+    payload.append("slug", formData.slug);
     if (formData.blogImage) payload.append("blogImage", formData.blogImage);
 
     try {
       await axios.patch(
-        `${import.meta.env.VITE_BACKEND_URL}/blog/update-blog/${id}`,
-        payload
+        `${import.meta.env.VITE_BACKEND_URL}/blog/update-blog/${slug}`,
+        payload,
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       navigate("/blogs");
       setAlert({
@@ -127,6 +137,7 @@ const EditBlog: React.FC = () => {
         blogName: "",
         htmlContent: "",
         blogImage: null,
+        slug:""
       });
     } catch (error) {
       setAlert({
@@ -185,6 +196,23 @@ const EditBlog: React.FC = () => {
               onChange={(e) => handleInputChange(e, "blogName")}
               error={!!errors.blogName}
               hint={errors.blogName}
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="slug"
+              className="font-medium text-gray-700 dark:text-gray-300"
+            >
+              Slug
+            </label>
+            <Input
+              id="slug"
+              placeholder="Enter slug"
+              value={formData.slug}
+              onChange={(e) => handleInputChange(e, "slug")}
+              error={!!errors.slug}
+              hint={errors.slug}
             />
           </div>
 
