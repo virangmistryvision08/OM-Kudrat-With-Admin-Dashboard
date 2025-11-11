@@ -13,6 +13,7 @@ import {
   Typography,
   Stack,
   Pagination,
+  PaginationItem,
 } from "@mui/material";
 import cookie from "js-cookie";
 
@@ -40,7 +41,9 @@ const Orders: React.FC = ({ limit, filter, setlimit }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(10);
   const [totalProducts, setTotalProducts] = useState(null);
-  const [token, setToken] = useState(cookie.get(`${import.meta.env.VITE_COOKIE_TOKEN_NAME}`));
+  const [token, setToken] = useState(
+    cookie.get(`${import.meta.env.VITE_COOKIE_TOKEN_NAME}`)
+  );
 
   const toggleRow = (id: string) => {
     setExpandedRow(expandedRow === id ? null : id);
@@ -294,55 +297,82 @@ const Orders: React.FC = ({ limit, filter, setlimit }) => {
       </TableContainer>
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center mt-4 gap-3">
-          {currentPage > 1 && (
-            <button
-              onClick={goToFirstPage}
-              className="px-4 py-2 border border-gray-600 rounded-full hover:bg-gray-100 dark:!text-white/90"
-            >
-              First
-            </button>
-          )}
-
-          <Stack spacing={2}>
-            <Pagination
-              className="dark:!text-white/90"
-              count={totalPages}
-              page={currentPage}
-              onChange={handlePageChange}
-              color="primary"
-            />
-          </Stack>
-
-          {currentPage < totalPages && (
-            <button
-              onClick={goToLastPage}
-              className="px-4 py-2 border border-gray-600 rounded-full hover:!bg-white/90 dark:!text-white/90"
-            >
-              Last
-            </button>
-          )}
-        </div>
-      )}
-
-      <div className="flex justify-end mt-5">
-        <div className="flex gap-2">
-          Order
+      <div className="flex justify-end items-center mt-4 gap-7">
+        <div className="flex items-center justify-end gap-2 dark:text-white/90">
+          Rows Per Page
           <select
-            defaultValue={limit}
+            className="border"
+            defaultValue={5}
             onChange={(e) => setlimit(e.target.value)}
-            className="border border-gray-600"
-            name=""
+            name="productLimit"
             id=""
           >
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="15">15</option>
             <option value="20">20</option>
-          </select>
+          </select>{" "}
+        </div>
 
-          <h1>of {totalProducts}</h1>
+        <div className="dark:text-white/90">
+          {currentPage} - {totalPages} of {totalPages}
+        </div>
+
+        <div className="flex items-center">
+          <button
+            disabled={currentPage === 1}
+            onClick={goToFirstPage}
+            className={`px-4 py-2 rounded-full hover:bg-gray-100 dark:!text-gray-200 dark:hover:bg-gray-700 ${
+              currentPage === 1 &&
+              "text-gray-400 hover:bg-white dark:hover:bg-black"
+            }`}
+          >
+            <i className="fa-solid fa-angles-left"></i>
+          </button>
+
+          <Stack spacing={2}>
+            <Pagination
+              count={totalPages}
+              shape="rounded"
+              onChange={handlePageChange}
+              siblingCount={0}
+              boundaryCount={0}
+              renderItem={(item) => {
+                if (
+                  item.type === "page" ||
+                  item.type === "start-ellipsis" ||
+                  item.type === "end-ellipsis"
+                ) {
+                  return null;
+                }
+
+                return (
+                  <PaginationItem
+                  className="dark:!text-white/90"
+                    {...item}
+                    sx={{
+                      "&.MuiPaginationItem-root": {
+                        borderRadius: "50%",
+                        width: 36,
+                        height: 36,
+                      },
+                    }}
+                  />
+                );
+              }}
+            />
+          </Stack>
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={goToLastPage}
+            className={`px-4 py-2 rounded-full hover:bg-gray-100 dark:!text-gray-200 dark:hover:bg-gray-700 ${
+              currentPage === totalPages &&
+              "text-gray-400 hover:bg-white dark:hover:bg-black"
+            }`}
+          >
+            <i className="fa-solid fa-angles-right"></i>
+          </button>
         </div>
       </div>
     </>

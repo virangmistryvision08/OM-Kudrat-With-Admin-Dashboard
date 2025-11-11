@@ -56,11 +56,11 @@ const navItems: NavItem[] = [
     name: "Blogs",
     path: "/blogs",
   },
-  // {
-  //   icon: <UserCircleIcon />,
-  //   name: "User Profile",
-  //   path: "/profile",
-  // },
+  {
+    icon: <i className="fa-solid fa-address-book"></i>,
+    name: "Contact Us",
+    path: "/contact-us",
+  },
   // {
   //   name: "Pages",
   //   icon: <PageIcon />,

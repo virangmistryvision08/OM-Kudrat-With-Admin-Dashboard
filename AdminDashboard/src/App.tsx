@@ -27,6 +27,7 @@ import OrdersList from "./pages/OtherPage/order/OrdersList";
 import BlogsList from "./pages/OtherPage/blog/BlogsList";
 import AddBlog from "./pages/OtherPage/blog/AddBlog"
 import EditBlog from "./pages/OtherPage/blog/EditBlog";
+import ContactUs from "./pages/OtherPage/ContactUs";
 
 export default function App() {
   return (
@@ -51,6 +52,7 @@ export default function App() {
             <Route path="/blogs" element={<BlogsList />} />
             <Route path="/blogs/add-blog" element={<AddBlog/>} />
             <Route path="/blogs/update-blog/:slug" element={<EditBlog />} />
+            <Route path="/contact-us" element={<ContactUs />} />
 
             {/* Forms */}
             <Route path="/form-elements" element={<FormElements />} />

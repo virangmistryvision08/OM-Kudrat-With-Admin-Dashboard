@@ -17,6 +17,7 @@ import Select from "../../components/form/Select";
 import FileInput from "../../components/form/input/FileInput";
 import Alert from "../../components/ui/alert/Alert";
 import cookie from "js-cookie";
+import { PaginationItem } from "@mui/material";
 
 interface Product {
   id: string;
@@ -243,9 +244,7 @@ const ProductsList: React.FC = () => {
     e.preventDefault();
     const newErrors: Record<string, string> = {};
 
-    
-
-    console.log(formData,'formData');
+    console.log(formData, "formData");
 
     if (!formData.name.trim()) newErrors.name = "Product name is required.";
     if (!formData.slug.trim()) newErrors.slug = "Product slug is required.";
@@ -460,59 +459,88 @@ const ProductsList: React.FC = () => {
           </div>
         </div>
 
-        {totalPages > 1 && (
-          <div className="flex justify-center items-center mt-4 gap-3">
-            {currentPage > 1 && (
-              <button
-                onClick={goToFirstPage}
-                className="px-4 py-2 border border-gray-600 rounded-full hover:bg-gray-100"
-              >
-                First
-              </button>
-            )}
+        {/* Pagination */}
+        <div className="flex justify-end items-center mt-4 gap-7">
+          <div className="flex items-center justify-end gap-2 dark:text-white/90">
+            Rows Per Page
+            <select
+              className="border"
+              defaultValue={5}
+              onChange={changeProduct}
+              name="productLimit"
+              id=""
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+            </select>{" "}
+          </div>
+
+          <div className="dark:text-white/90">
+            {currentPage} - {totalPages} of {totalPages}
+          </div>
+
+          <div className="flex items-center">
+            <button
+              disabled={currentPage === 1}
+              onClick={goToFirstPage}
+              className={`px-4 py-2 rounded-full hover:bg-gray-100 dark:!text-gray-200 dark:hover:bg-gray-700 ${
+                currentPage === 1 &&
+                "text-gray-400 hover:bg-white dark:hover:bg-black"
+              }`}
+            >
+              <i className="fa-solid fa-angles-left"></i>
+            </button>
 
             <Stack spacing={2}>
               <Pagination
                 count={totalPages}
-                page={currentPage}
+                shape="rounded"
                 onChange={handlePageChange}
-                color="primary"
-                hidePrevButton={currentPage === 1}
-                hideNextButton={currentPage === totalPages}
+                siblingCount={0}
+                boundaryCount={0}
+                renderItem={(item) => {
+                  if (
+                    item.type === "page" ||
+                    item.type === "start-ellipsis" ||
+                    item.type === "end-ellipsis"
+                  ) {
+                    return null;
+                  }
+
+                  return (
+                    <PaginationItem
+                    className="dark:!text-white/90"
+                      {...item}
+                      sx={{
+                        "&.MuiPaginationItem-root": {
+                          borderRadius: "50%",
+                          width: 36,
+                          height: 36,
+                        },
+                      }}
+                    />
+                  );
+                }}
               />
             </Stack>
 
-            {currentPage < totalPages && (
-              <button
-                onClick={goToLastPage}
-                className="px-4 py-2 border border-gray-600 rounded-full hover:bg-gray-100"
-              >
-                Last
-              </button>
-            )}
+            <button
+              disabled={currentPage === totalPages}
+              onClick={goToLastPage}
+              className={`px-4 py-2 rounded-full hover:bg-gray-100 dark:!text-gray-200 dark:hover:bg-gray-700 ${
+                currentPage === totalPages &&
+                "text-gray-400 hover:bg-white dark:hover:bg-black"
+              }`}
+            >
+              <i className="fa-solid fa-angles-right"></i>
+            </button>
           </div>
-        )}
-
-        <div className="mt-4 flex items-center justify-end gap-2">
-          Product
-          <select
-            className=" border border-gray-600"
-            defaultValue={5}
-            dir="rtl"
-            onChange={changeProduct}
-            name="productLimit"
-            id=""
-          >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-          </select>{" "}
-          of {totalProducts}
         </div>
       </div>
 
-      {/* Add Product Modal */}
+      {/* Add or Update Product Modal */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => {
@@ -619,7 +647,7 @@ const ProductsList: React.FC = () => {
                     src={
                       formData.file
                         ? URL.createObjectURL(formData.file)
-                        : formData.existingImage // 👈 show saved image
+                        : formData.existingImage
                     }
                     alt="Preview"
                     className="w-16 h-16 object-cover rounded border"

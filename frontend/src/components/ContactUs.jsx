@@ -73,10 +73,13 @@ const ContactUs = () => {
     axios
       .post(`${import.meta.env.VITE_BACKEND_URL}/contact-us/add-question`, data)
       .then((res) => {
-        console.log(res.data, "response");
+        toast.success(res.data.message);
+        setData({});
       })
       .catch((error) => {
-        console.log(error, "error");
+        toast.success(
+          error.response ? error.response.data.message : error.message
+        );
       });
 
     setData({});
@@ -126,6 +129,7 @@ const ContactUs = () => {
                   <input
                     name="name"
                     onChange={getdata}
+                    value={data.name || ""}
                     className={`w-full ${
                       errMessage.name
                         ? "outline-[#e91d1d]"
@@ -141,6 +145,7 @@ const ContactUs = () => {
                   <input
                     name="email"
                     onChange={getdata}
+                    value={data.email || ""}
                     className="w-full outline-[#018D43] border border-gray-300 rounded-full placeholder:text-gray-500 !font-[400] placeholder:text-sm px-4 py-3"
                     type="text"
                     placeholder="Your Email*"
@@ -154,6 +159,7 @@ const ContactUs = () => {
                   <textarea
                     name="question"
                     onChange={getdata}
+                    value={data.question || ""}
                     className="w-full outline-[#018D43] border border-gray-300 rounded-3xl placeholder:text-gray-500 !font-[400] placeholder:text-sm px-4 py-3 min-h-32"
                     placeholder="Question*"
                     id=""
